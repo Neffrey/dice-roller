@@ -13,7 +13,7 @@ const Home: NextPage = () => {
         <h1>Dice Roller</h1>
 
         <div>
-          <h3>Hi mom</h3>
+          <h3>Hi emma</h3>
         </div>
       </div>
     </>
