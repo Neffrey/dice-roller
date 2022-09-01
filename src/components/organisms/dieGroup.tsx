@@ -74,11 +74,11 @@ const DiceGroup: React.FC<DiceGroupType> = ({
       {/* <HStack flexWrap="wrap">
         <DiceRows numDie={numDie} rollValues={rollValues} sides={sides} />
       </HStack> */}
-      <Grid templateColumns="repeat(4, 1fr)">
+      <Grid templateColumns="repeat(5, 1fr)">
         <DiceRows numDie={numDie} rollValues={rollValues} sides={sides} />
       </Grid>
       <Button onClick={() => setRollGroupFlag(sides)}>roll group</Button>
-      <Heading as="h5">Group Total: {groupTotal}</Heading>
+      <Heading as="h5" fontSize="2xl">Group Total: {groupTotal}</Heading>
     </VStack>
   );
 };
