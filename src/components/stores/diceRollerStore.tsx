@@ -12,8 +12,10 @@ export interface DiceGroupType {
 }
 
 export interface DiceRollerStoreTypes {
-  calcGroupedDiceTotal: () => void;
+  calcAllGroups: () => void;
+  resetNumDie: () => void;
   rollDice: (sides: number, numDie: number) => void;
+  setGroupTotal: (sides: number, rollValues: number[]) => void;
   setNumDie: (sides: number, numDie: number) => void;
   setRollAllFlags: () => void;
   setRollGroupFlag: (sides: number) => void;
@@ -23,13 +25,20 @@ export interface DiceRollerStoreTypes {
 }
 
 export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
-  calcGroupedDiceTotal: () => {
+  calcAllGroups: () => {
     set((state) => ({
       groupedDiceTotal: state.diceGroups
         .map((diceGroup) => {
           return diceGroup.addToTotal ? diceGroup.groupTotal : 0;
         })
         .reduce((prev, cur) => prev + cur, 0),
+    }));
+  },
+  resetNumDie: () => {
+    set((state) => ({
+      diceGroups: state.diceGroups.map((diceGroup) => {
+        return { ...diceGroup, numDie: 0 };
+      }),
     }));
   },
   rollDice: (sides, numDie) => {
@@ -57,6 +66,19 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
           return diceGroup.addToTotal ? diceGroup.groupTotal : 0;
         })
         .reduce((prev, cur) => prev + cur, 0),
+    }));
+  },
+  setGroupTotal: (sides, rollValues) => {
+    set((state) => ({
+      diceGroups: state.diceGroups.map((diceGroup) => {
+        return diceGroup.sides === sides
+          ? {
+              ...diceGroup,
+              rollValues: rollValues,
+              groupTotal: rollValues.reduce((prev, cur) => prev + cur, 0),
+            }
+          : diceGroup;
+      }),
     }));
   },
   setNumDie: (sides, numDie) => {

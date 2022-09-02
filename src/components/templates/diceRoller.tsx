@@ -1,6 +1,13 @@
 /** FRAMEWORKS */
 import React from "react";
-import { Button, Container, Grid, GridItem, Heading } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+} from "@chakra-ui/react";
 
 /** DATA STORES */
 import { useDiceStore } from "src/components/stores/diceRollerStore";
@@ -9,12 +16,18 @@ import { useDiceStore } from "src/components/stores/diceRollerStore";
 import DieGroup from "src/components/organisms/dieGroup";
 
 const DiceRoller: React.FC = () => {
-  const groupedDiceTotal = useDiceStore((state) => state.groupedDiceTotal);
+  const calcAllGroups = useDiceStore((state) => state.calcAllGroups);
   const dGroups = useDiceStore((state) => state.diceGroups);
-  const setRollAllFlags = useDiceStore(
-    (state) => state.setRollAllFlags
-  );
-  
+  const groupedDiceTotal = useDiceStore((state) => state.groupedDiceTotal);
+  const resetNumDie = useDiceStore((state) => state.resetNumDie);
+  const setRollAllFlags = useDiceStore((state) => state.setRollAllFlags);
+
+  // Effect to calculate group total
+  React.useEffect(() => {
+    calcAllGroups();
+    return () => {};
+  }, [calcAllGroups, dGroups, groupedDiceTotal]);
+
 
   return (
     <Container minW="100%" maxW="100%" overflow="hidden">
@@ -43,8 +56,11 @@ const DiceRoller: React.FC = () => {
           </GridItem>
         ))}
         <GridItem minH={50} w="100%">
-          <Heading as={'h3'}>Total: {groupedDiceTotal}</Heading>
-          <Button onClick={() => setRollAllFlags()}>Roll All Dice</Button>
+          <Heading as={"h3"}>Total: {groupedDiceTotal}</Heading>
+          <HStack>
+            <Button onClick={() => setRollAllFlags()}>Roll All Dice</Button>
+            <Button onClick={() => resetNumDie()}>Reset All Dice</Button>
+          </HStack>
         </GridItem>
       </Grid>
     </Container>

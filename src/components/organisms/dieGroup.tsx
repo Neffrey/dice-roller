@@ -7,7 +7,6 @@ import {
   Grid,
   Heading,
   HStack,
-  Text,
   VStack,
 } from "@chakra-ui/react";
 
@@ -19,7 +18,6 @@ import {
 import DieIcon from "src/components/molecules/dieIcon";
 import NumDieBtnGroup from "src/components/molecules/numDieBtnGroup";
 import NumDieInput from "src/components/molecules/numDieInput";
-import NumDieSlider from "src/components/molecules/numDieSlider";
 import DiceRows from "src/components/organisms/diceRows";
 
 // Types
@@ -37,10 +35,11 @@ const DiceGroup: React.FC<DiceGroupType> = ({
   rollGroupFlag,
   rollValues,
 }) => {
-  const toggleAddToTotal = useDiceStore((state) => state.toggleAddToTotal);
   const rollDice = useDiceStore((state) => state.rollDice);
+  const setGroupTotal = useDiceStore((state) => state.setGroupTotal);
   const setRollGroupFlag = useDiceStore((state) => state.setRollGroupFlag);
   const setNumDie = useDiceStore((state) => state.setNumDie);
+  const toggleAddToTotal = useDiceStore((state) => state.toggleAddToTotal);
 
   // Effect to trigger rollDice
   React.useEffect(() => {
@@ -49,14 +48,23 @@ const DiceGroup: React.FC<DiceGroupType> = ({
       setRollGroupFlag(sides);
     }
     return () => {};
-  }, [rollDice, setRollGroupFlag, rollGroupFlag, sides, numDie]);
+  }, [rollDice, setRollGroupFlag, rollGroupFlag, numDie, sides]);
 
+  // Effect to keep the minimum numDie at 0
   React.useEffect(() => {
     if (numDie < 0) {
       setNumDie(sides, 0);
     }
     return () => {};
   }, [numDie, sides, setNumDie]);
+
+  // Effect to erase roll values for dice that are removed and update group total
+  React.useEffect(() => {
+    if (numDie < rollValues.length) {
+      setGroupTotal(sides, rollValues.slice(0, numDie));
+    }
+    return () => {};
+  }, [setGroupTotal, numDie, sides, rollValues]);
 
   return (
     <VStack p={10}>
@@ -71,14 +79,13 @@ const DiceGroup: React.FC<DiceGroupType> = ({
       <Checkbox isChecked={addToTotal} onChange={() => toggleAddToTotal(sides)}>
         Add group roll to total
       </Checkbox>
-      {/* <HStack flexWrap="wrap">
-        <DiceRows numDie={numDie} rollValues={rollValues} sides={sides} />
-      </HStack> */}
       <Grid templateColumns="repeat(5, 1fr)">
         <DiceRows numDie={numDie} rollValues={rollValues} sides={sides} />
       </Grid>
       <Button onClick={() => setRollGroupFlag(sides)}>roll group</Button>
-      <Heading as="h5" fontSize="2xl">Group Total: {groupTotal}</Heading>
+      <Heading as="h5" fontSize="2xl">
+        Group Total: {groupTotal}
+      </Heading>
     </VStack>
   );
 };

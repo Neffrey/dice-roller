@@ -28,6 +28,6 @@ const DiceRows: React.FC<diceIconGroupProps> = ({
       </GridItem>
     );
   }
-  return <>{numDie && diceRows}</>;
+  return numDie ? <>{diceRows}</> : <></>;
 };
 export default DiceRows;
