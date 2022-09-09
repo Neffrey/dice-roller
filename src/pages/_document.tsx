@@ -2,11 +2,6 @@
 import React from "react";
 // import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { ColorModeScript } from "@chakra-ui/react";
-
-// THEMING
-//import Theme from "./_document"
-import Theme from "src/styles/index";
 
 export default class MyDocument extends Document {
   render() {
@@ -17,7 +12,6 @@ export default class MyDocument extends Document {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
-          <ColorModeScript initialColorMode={Theme.initialColorMode} />
           <Main />
           <NextScript />
         </body>
@@ -51,7 +45,7 @@ MyDocument.getInitialProps = async (ctx) => {
   // 3. app.render
   // 4. page.render
 
-  // // Render app and page and get the context of the page with collected side effects.
+  // Render app and page and get the context of the page with collected side effects.
   // const sheets = new ServerStyleSheets();
   // const originalRenderPage = ctx.renderPage;
 

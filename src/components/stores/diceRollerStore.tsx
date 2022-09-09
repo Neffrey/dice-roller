@@ -2,6 +2,7 @@
 import create from "zustand";
 
 export interface DiceGroupType {
+  groupKey: number;
   sides: number;
   title: string;
   groupTotal: number;
@@ -14,24 +15,31 @@ export interface DiceGroupType {
 export interface DiceRollerStoreTypes {
   calcAllGroups: () => void;
   resetNumDie: () => void;
-  rollDice: (sides: number, numDie: number) => void;
-  setGroupTotal: (sides: number, rollValues: number[]) => void;
-  setNumDie: (sides: number, numDie: number) => void;
+  rollDice: (groupKey: number, numDie: number, sides: number) => void;
+  setGroupedAddMod: (newAddMod: number) => void;
+  setGroupTotal: (groupKey: number, rollValues: number[]) => void;
+  setNumDie: (groupKey: number, numDie: number) => void;
   setRollAllFlags: () => void;
-  setRollGroupFlag: (sides: number) => void;
+  setRollGroupFlag: (groupKey: number) => void;
+  setSides: (groupKey: number, sides: number) => void;
   toggleAddToTotal: (sides: number) => void;
   groupedDiceTotal: number;
+  groupedAddMod: number;
   diceGroups: DiceGroupType[];
 }
 
 export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
   calcAllGroups: () => {
-    set((state) => ({
-      groupedDiceTotal: state.diceGroups
-        .map((diceGroup) => {
-          return diceGroup.addToTotal ? diceGroup.groupTotal : 0;
-        })
-        .reduce((prev, cur) => prev + cur, 0),
+    let newGroupedTotal = get()
+      .diceGroups.map((diceGroup) => {
+        return diceGroup.addToTotal ? diceGroup.groupTotal : 0;
+      })
+      .reduce((prev, cur) => prev + cur, 0);
+    newGroupedTotal > 0
+      ? (newGroupedTotal = newGroupedTotal + get().groupedAddMod)
+      : (newGroupedTotal = 0);
+    set(() => ({
+      groupedDiceTotal: newGroupedTotal,
     }));
   },
   resetNumDie: () => {
@@ -41,16 +49,16 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       }),
     }));
   },
-  rollDice: (sides, numDie) => {
+  rollDice: (groupKey, numDie, sides) => {
     // Returns a random integer from 0 to sides -1. +1 at end to make the int from 1 to sides
-    var rollValuesArray: number[] = [];
+    const rollValuesArray: number[] = [];
     for (let i = 0; i < numDie; i++) {
       rollValuesArray[i] = Math.floor(Math.random() * sides + 1);
     }
     // Set rollValuesArray inside of individual diceGroup
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
-        return diceGroup.sides === sides
+        return diceGroup.groupKey === groupKey
           ? {
               ...diceGroup,
               rollValues: rollValuesArray,
@@ -59,19 +67,11 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
           : diceGroup;
       }),
     }));
-    // Calculate Grouped Total
-    set((state) => ({
-      groupedDiceTotal: state.diceGroups
-        .map((diceGroup) => {
-          return diceGroup.addToTotal ? diceGroup.groupTotal : 0;
-        })
-        .reduce((prev, cur) => prev + cur, 0),
-    }));
   },
-  setGroupTotal: (sides, rollValues) => {
+  setGroupTotal: (groupKey, rollValues) => {
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
-        return diceGroup.sides === sides
+        return diceGroup.sides === groupKey
           ? {
               ...diceGroup,
               rollValues: rollValues,
@@ -81,14 +81,31 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       }),
     }));
   },
-  setNumDie: (sides, numDie) => {
-    set((state) => ({
-      diceGroups: state.diceGroups.map((diceGroup) => {
-        return diceGroup.sides === sides
-          ? { ...diceGroup, numDie: numDie }
-          : diceGroup;
-      }),
-    }));
+  setGroupedAddMod: (newAddMod) => {
+    isNaN(newAddMod)
+      ? set(() => ({
+          groupedAddMod: 0,
+        }))
+      : set(() => ({
+          groupedAddMod: newAddMod,
+        }));
+  },
+  setNumDie: (groupKey, numDie) => {
+    isNaN(numDie) || numDie <= 0
+      ? set((state) => ({
+          diceGroups: state.diceGroups.map((diceGroup) => {
+            return diceGroup.groupKey === groupKey
+              ? { ...diceGroup, numDie: 0 }
+              : diceGroup;
+          }),
+        }))
+      : set((state) => ({
+          diceGroups: state.diceGroups.map((diceGroup) => {
+            return diceGroup.groupKey === groupKey
+              ? { ...diceGroup, numDie: numDie }
+              : diceGroup;
+          }),
+        }));
   },
   setRollAllFlags: () => {
     set((state) => ({
@@ -97,27 +114,46 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       }),
     }));
   },
-  setRollGroupFlag: (sides) => {
+  setRollGroupFlag: (groupKey) => {
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
-        return diceGroup.sides === sides
+        return diceGroup.groupKey === groupKey
           ? { ...diceGroup, rollGroupFlag: !diceGroup.rollGroupFlag }
           : diceGroup;
       }),
     }));
   },
-  toggleAddToTotal: (sides) => {
+  setSides: (groupKey, sides) => {
+    isNaN(sides) || sides <= 0
+      ? set((state) => ({
+          diceGroups: state.diceGroups.map((diceGroup) => {
+            return diceGroup.groupKey === groupKey
+              ? { ...diceGroup, sides: 0 }
+              : diceGroup;
+          }),
+        }))
+      : set((state) => ({
+          diceGroups: state.diceGroups.map((diceGroup) => {
+            return diceGroup.groupKey === groupKey
+              ? { ...diceGroup, sides: sides }
+              : diceGroup;
+          }),
+        }));
+  },
+  toggleAddToTotal: (groupKey) => {
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
-        return diceGroup.sides === sides
+        return diceGroup.groupKey === groupKey
           ? { ...diceGroup, addToTotal: !diceGroup.addToTotal }
           : diceGroup;
       }),
     }));
   },
+  groupedAddMod: 0,
   groupedDiceTotal: 0,
   diceGroups: [
     {
+      groupKey: 1,
       sides: 20,
       title: "D20",
       groupTotal: 0,
@@ -127,6 +163,7 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       rollValues: [],
     },
     {
+      groupKey: 2,
       sides: 4,
       title: "D4",
       addToTotal: true,
@@ -136,6 +173,7 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       rollValues: [],
     },
     {
+      groupKey: 3,
       sides: 6,
       title: "D6",
       addToTotal: true,
@@ -145,6 +183,7 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       rollValues: [],
     },
     {
+      groupKey: 4,
       sides: 8,
       title: "D8",
       addToTotal: true,
@@ -154,6 +193,7 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       rollValues: [],
     },
     {
+      groupKey: 5,
       sides: 10,
       title: "D10",
       groupTotal: 0,
@@ -163,6 +203,7 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       rollValues: [],
     },
     {
+      groupKey: 6,
       sides: 12,
       title: "D12",
       groupTotal: 0,
@@ -172,8 +213,19 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       rollValues: [],
     },
     {
+      groupKey: 7,
       sides: 100,
       title: "D100",
+      groupTotal: 0,
+      addToTotal: true,
+      rollGroupFlag: false,
+      numDie: 0,
+      rollValues: [],
+    },
+    {
+      groupKey: 8,
+      sides: 0,
+      title: "DX",
       groupTotal: 0,
       addToTotal: true,
       rollGroupFlag: false,
