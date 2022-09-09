@@ -13,7 +13,15 @@ export interface DiceGroupType {
 }
 
 export interface DiceRollerStoreTypes {
+  alternateStyles: (
+    current: number,
+    rowSize: number,
+    style1: string,
+    style2: string,
+    opposite?: 0 | 1
+  ) => void;
   calcAllGroups: () => void;
+  deleteDie: (groupKey: number, rollIndex: number) => void;
   resetNumDie: () => void;
   rollDice: (groupKey: number, numDie: number, sides: number) => void;
   setGroupedAddMod: (newAddMod: number) => void;
@@ -29,6 +37,11 @@ export interface DiceRollerStoreTypes {
 }
 
 export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
+  alternateStyles: (current, rowSize, style1, style2, opposite = 0) => {
+    return (current + Math.floor(current / rowSize)) % 2 == opposite
+      ? style1
+      : style2;
+  },
   calcAllGroups: () => {
     let newGroupedTotal = get()
       .diceGroups.map((diceGroup) => {
@@ -40,6 +53,21 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
       : (newGroupedTotal = 0);
     set(() => ({
       groupedDiceTotal: newGroupedTotal,
+    }));
+  },
+  deleteDie: (groupKey, rollIndex) => {
+    set((state) => ({
+      diceGroups: state.diceGroups.map((diceGroup) => {
+        return diceGroup.groupKey === groupKey
+          ? {
+              ...diceGroup,
+              rollValues: diceGroup.rollValues.filter((rollValue, index)=> {
+                if (index != rollIndex) return rollValue
+              }),
+              numDie: diceGroup.numDie - 1,
+            }
+          : diceGroup;
+      }),
     }));
   },
   resetNumDie: () => {
@@ -71,7 +99,7 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
   setGroupTotal: (groupKey, rollValues) => {
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
-        return diceGroup.sides === groupKey
+        return diceGroup.groupKey === groupKey
           ? {
               ...diceGroup,
               rollValues: rollValues,

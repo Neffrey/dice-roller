@@ -18,15 +18,16 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto flex flex-col items-center justify-center min-h-screen max-w-max p-4">
+      <main className="container mx-auto flex flex-col items-center justify-center min-h-screen max-w-max">
+        <div className="p-4" />
         <h1 className="text-center text-5xl font-bold">Dice Roller</h1>
         <div className="p-3" />
-        <div className="flex justify-center items-center gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 justify-center items-center gap-5">
+          <button className="btn btn-accent" onClick={() => resetNumDie()}>
+            Reset All Dice
+          </button>
           <button className="btn btn-primary" onClick={() => setRollAllFlags()}>
             Roll All Dice
-          </button>
-          <button className="btn btn-primary" onClick={() => resetNumDie()}>
-            Reset All Dice
           </button>
           <div className="flex border-2 rounded-lg p-2">
             <h4 className="text-base">
@@ -41,13 +42,14 @@ const Home: NextPage = () => {
             </h4>
           </div>
           <div className="border-b-4 border-b-secondary p-2">
-            <h3 className="text-xl font-semibold">
+            <h3 className="text-2xl text-center font-semibold">
               COMBINED TOTAL: {groupedDiceTotal}
             </h3>
           </div>
         </div>
         <div className="p-3" />
         <DiceRoller />
+        <div className="flex flex-col justify-center items-center bg-accent h-20 w-full min-w-max"><h3>Made With Love by Neffrey</h3></div>
       </main>
     </>
   );

@@ -23,6 +23,7 @@ const DiceGroup = ({
   rollValues,
   title,
 }: DiceGroupType) => {
+  const alternateStyles = useDiceStore((state) => state.alternateStyles);
   const rollDice = useDiceStore((state) => state.rollDice);
   const setGroupTotal = useDiceStore((state) => state.setGroupTotal);
   const setRollGroupFlag = useDiceStore((state) => state.setRollGroupFlag);
@@ -47,14 +48,23 @@ const DiceGroup = ({
 
   return (
     <div
+      // DIE GROUP CARD
       key={groupKey}
-      className={`${
-        groupKey === 1 || groupKey === 3 || groupKey === 6 || groupKey === 8
-          ? "bg-slate-800"
-          : "bg-slate-900"
-      } card justify-center shadow-lg border-solid border-2 p-4 h-full`}
+      className={`card justify-center shadow-lg border-solid border-2 min-h-full p-4 h-full ${
+        // Alternate border colors
+        alternateStyles(groupKey - 1, 4, "bg-slate-800", "bg-slate-900")
+      }`}
     >
-      <div className="flex justify-center items-center gap-2">
+      {/* (groupKey <= 4 && groupKey % 2 == 0) ||
+    (groupKey > 4 && groupKey % 2 == 1)
+      ? "bg-slate-800"
+      : "bg-slate-900"
+  }`}
+> */}
+      <div
+        // CARD HEADER
+        className="flex justify-center items-center gap-2"
+      >
         <input
           className="w-10 text-base p-2 rounded-md text-slate-800 text-center"
           type="text"
@@ -72,43 +82,54 @@ const DiceGroup = ({
           />
         )}
       </div>
-      <div className="p-1" />
-      <div className="btn-group justify-center">
+      <div className="p-2" />
+      <div
+        // NUMDIE BTN GROUP
+        className="btn-group justify-center"
+      >
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-yellow-100 hover:border-b-yellow-100 hover:bg-yellow-100"
+          className="btn btn-outline border-b-4 border-gray-300 border-b-secondary/70 hover:border-b-secondary/70 hover:bg-secondary/70"
           onClick={() => setNumDie(groupKey, numDie - 2)}
         >
           -2
         </button>
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-yellow-300 hover:border-b-yellow-300 hover:bg-yellow-300"
+          className="btn btn-outline border-b-4 border-gray-300 border-b-secondary hover:border-b-secondary hover:bg-secondary"
           onClick={() => setNumDie(groupKey, numDie - 1)}
         >
           -1
         </button>
         <button
-          className="btn btn-outline border-b-4 border-b-red-500  text-gray-300 hover:bg-red-500 hover:border-b-red-500"
+          className="btn btn-outline border-b-4 border-b-accent text-gray-300 hover:bg-accent hover:border-b-accent"
           onClick={() => setNumDie(groupKey, 0)}
         >
           Clear
         </button>
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-green-300 hover:border-b-green-300 hover:bg-green-300"
+          className="btn btn-outline border-b-4 border-gray-300 border-b-primary hover:border-b-primary hover:bg-primary"
           onClick={() => setNumDie(groupKey, numDie + 1)}
         >
           +1
         </button>
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-green-100 hover:border-b-green-100 hover:bg-green-100"
+          className="btn btn-outline border-b-4 border-gray-300 border-b-primary/70 hover:border-b-primary/70 hover:bg-primary/70"
           onClick={() => setNumDie(groupKey, numDie + 2)}
         >
           +2
         </button>
       </div>
       <div className="p-2" />
-      <DiceRows groupKey={groupKey} numDie={numDie} rollValues={rollValues} />
-      <div className="p-2" />
-      <div className="flex justify-center items-center gap-3">
+      <DiceRows
+        groupKey={groupKey}
+        numDie={numDie}
+        rollValues={rollValues}
+        title={title}
+      />
+      <div className="p-4" />
+      <div
+        // CARD FOOTER
+        className="flex justify-center items-center gap-3"
+      >
         <button
           className="btn btn-primary"
           onClick={() => setRollGroupFlag(groupKey)}
@@ -119,7 +140,7 @@ const DiceGroup = ({
           <label className="label justify-center items-center cursor-pointer">
             <input
               checked={addToTotal}
-              onChange={() => toggleAddToTotal(sides)}
+              onChange={() => toggleAddToTotal(groupKey)}
               type="checkbox"
               className="checkbox checkbox-secondary"
             />
@@ -129,7 +150,7 @@ const DiceGroup = ({
         </div>
       </div>
       <div className="p-2" />
-      <h5 className="text-center text-xl uppercase">
+      <h5 className="text-center center-content text-xl uppercase">
         {title} Group Total: {groupTotal}
       </h5>
     </div>
