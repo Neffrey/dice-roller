@@ -20,7 +20,7 @@ const Header: React.FC = () => {
         </div>
         <div className="p-3" />
         <h1 className="text-base font-semibold text-secondary-content sm:text-xl md:text-2xl lg:text-4xl">
-          DICE ROLLER
+          {"NEFF'S DICE ROLLER"}
         </h1>
       </div>
 
