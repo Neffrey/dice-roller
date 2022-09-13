@@ -32,15 +32,15 @@ export default class MyDocument extends Document {
             color="#5bbad5"
           />
           <link rel="shortcut icon" href="/favicon.ico?v=2.0" />
-          <meta name="apple-mobile-web-app-title" content="Dice Roller" />
-          <meta name="application-name" content="Dice Roller" />
+          <meta name="apple-mobile-web-app-title" content="nDiceRoller" />
+          <meta name="application-name" content="nDiceRoller" />
           <meta name="theme-color" content="#333333" />
           <meta name="msapplication-TileColor" content="#00a3c4" />
           <meta property="og:type" content="website" />
-          <meta property="og:title" content="Dice Roller by Neffrey" />
+          <meta property="og:title" content="nDiceRoller - Prayin for nat 20s" />
           <meta
             property="og:description"
-            content="Roll any number of dice with any number of sides - A better multi dice roller"
+            content="Roll any number of dice with any number of sides - A better multi dice roller with other features like combining dice totals and adding a flat modifier to it."
           />
           <meta
             property="og:image"
