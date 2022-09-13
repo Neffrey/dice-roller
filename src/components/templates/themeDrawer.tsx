@@ -1,5 +1,6 @@
 // FRAMEWORK
 import React from "react";
+import { FaStar } from "react-icons/fa";
 
 // MY COMPONENTS
 import { useThemeStore } from "components/stores/themeStore";
@@ -43,10 +44,10 @@ const ThemeDrawer = ({ children }: ThemeDrawerProps) => {
                 key={theme}
                 data-set-theme={theme}
                 data-act-class="ACTIVECLASS"
-                className={`overflow-hidden rounded-lg border border-base-content/20 outline-2 outline-offset-2 outline-base-content hover:border-base-content/40 ${
+                className={`overflow-hidden rounded-lg outline-2 outline-offset-2 outline-base-content ${
                   theme === currentTheme
-                    ? "border-b-8 border-b-primary hover:border-b-primary"
-                    : ""
+                    ? "border-4 border-primary hover:border-b-primary"
+                    : "border border-base-content/20 hover:border-base-content/40"
                 }`}
                 onClick={() => {
                   setCurrentTheme(theme);
@@ -55,8 +56,13 @@ const ThemeDrawer = ({ children }: ThemeDrawerProps) => {
                 <label htmlFor="theme-drawer">
                   <div
                     data-theme={theme}
-                    className="w-full cursor-pointer bg-base-100 font-sans text-base-content"
+                    className="relative w-full cursor-pointer bg-base-100 font-sans text-base-content"
                   >
+                    {theme === currentTheme && (
+                      <div className="absolute top-1 left-1 text-2xl text-primary">
+                        <FaStar />
+                      </div>
+                    )}
                     <div className="grid grid-cols-5 grid-rows-3">
                       <div className="col-start-1 row-span-2 row-start-1 bg-base-200"></div>
                       <div className="col-start-1 row-start-3 bg-base-300"></div>
