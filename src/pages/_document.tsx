@@ -1,12 +1,13 @@
 // FRAMEWORK
 import React from "react";
-// import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 import Document, { Html, Head, Main, NextScript } from "next/document";
+// import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
+
 
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en">
+      <Html lang="en" data-theme="dark">
         <Head>
           <meta name="theme-color" content="#333" />
           <link rel="icon" href="/favicon.ico" />

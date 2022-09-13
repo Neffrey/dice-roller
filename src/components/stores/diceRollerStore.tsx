@@ -61,8 +61,8 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
         return diceGroup.groupKey === groupKey
           ? {
               ...diceGroup,
-              rollValues: diceGroup.rollValues.filter((rollValue, index)=> {
-                if (index != rollIndex) return rollValue
+              rollValues: diceGroup.rollValues.filter((rollValue, index) => {
+                if (index != rollIndex) return rollValue;
               }),
               numDie: diceGroup.numDie - 1,
             }

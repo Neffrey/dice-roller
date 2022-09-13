@@ -8,7 +8,7 @@ interface DieIconProps {
 }
 
 // Component Function
-const DieIcon = ({ classNames = "", groupKey }: DieIconProps) => {
+const DieIcon = ({ groupKey, classNames = "" }: DieIconProps) => {
   // Change SVG vars depending on groupKey
   switch (groupKey) {
     case 1:

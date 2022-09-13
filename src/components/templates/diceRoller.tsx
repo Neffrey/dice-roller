@@ -19,8 +19,8 @@ const DiceRoller: React.FC = () => {
   }, [calcAllGroups, dGroups, groupedAddMod, groupedDiceTotal]);
 
   return (
-    <div className="w-max overlow-hidden max-w-max">
-      <div className="text-4xl grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3">
+    <div className="overlow-hidden w-max max-w-max">
+      <div className="grid gap-3 text-4xl sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4">
         {dGroups.map((dGroup) => (
           <div className="w-full" key={dGroup.groupKey}>
             <DieGroup

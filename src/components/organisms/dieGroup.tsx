@@ -1,7 +1,7 @@
-/** FRAMEWORK */
+// FRAMEWORKS
 import React from "react";
 
-/** MY COMPONENTS */
+// MY COMPONENTS
 import { DiceGroupType, useDiceStore } from "components/stores/diceRollerStore";
 import DieIcon from "components/molecules/dieIcon";
 import DiceRows from "components/organisms/diceRows";
@@ -12,7 +12,7 @@ export interface NumDieInputType {
   sides: number;
 }
 
-/** COMPONENT */
+// COMPONENT
 const DiceGroup = ({
   groupKey,
   sides,
@@ -50,32 +50,31 @@ const DiceGroup = ({
     <div
       // DIE GROUP CARD
       key={groupKey}
-      className={`card justify-center shadow-lg border-solid border-2 min-h-full p-4 h-full ${
-        // Alternate border colors
-        alternateStyles(groupKey - 1, 4, "bg-slate-800", "bg-slate-900")
+      className={`card h-full min-h-full justify-center rounded-lg border-2 border-solid p-4 ${
+        // Alternate border & bg colors
+        alternateStyles(
+          groupKey - 1,
+          4,
+          "border-primary bg-base-200 shadow-md shadow-primary-focus/70",
+          "border-secondary bg-base-300 shadow-md shadow-secondary-focus/70"
+        )
       }`}
     >
-      {/* (groupKey <= 4 && groupKey % 2 == 0) ||
-    (groupKey > 4 && groupKey % 2 == 1)
-      ? "bg-slate-800"
-      : "bg-slate-900"
-  }`}
-> */}
       <div
         // CARD HEADER
-        className="flex justify-center items-center gap-2"
+        className="flex items-center justify-center gap-2"
       >
         <input
-          className="w-10 text-base p-2 rounded-md text-slate-800 text-center"
+          className="w-10 rounded-md border border-solid border-base-content/40 p-2 text-center text-base text-slate-800"
           type="text"
           value={numDie}
           onChange={(e) => setNumDie(groupKey, parseInt(e.target.value))}
         />
-        <DieIcon classNames="w-10 fill-white" groupKey={groupKey} />
+        <DieIcon groupKey={groupKey} classNames="w-10 fill-base-content" />
         <h3 className="text-xl">{title}</h3>
         {groupKey == 8 && (
           <input
-            className="ml-2 w-10 text-base p-2 rounded-md text-slate-800 text-center"
+            className="ml-2 w-10 rounded-md border border-solid border-base-content/40 p-2 text-center text-base text-slate-800"
             type="text"
             value={sides}
             onChange={(e) => setSides(groupKey, parseInt(e.target.value))}
@@ -85,34 +84,34 @@ const DiceGroup = ({
       <div className="p-2" />
       <div
         // NUMDIE BTN GROUP
-        className="btn-group justify-center"
+        className="btn-group justify-center text-base-content"
       >
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-secondary/70 hover:border-b-secondary/70 hover:bg-secondary/70"
+          className="btn btn-outline border-b-4 border-base-content/40 border-b-secondary/70 hover:border-b-secondary/70 hover:bg-secondary/70"
           onClick={() => setNumDie(groupKey, numDie - 2)}
         >
           -2
         </button>
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-secondary hover:border-b-secondary hover:bg-secondary"
+          className="btn btn-outline border-b-4 border-base-content/40 border-b-secondary hover:border-b-secondary hover:bg-secondary"
           onClick={() => setNumDie(groupKey, numDie - 1)}
         >
           -1
         </button>
         <button
-          className="btn btn-outline border-b-4 border-b-accent text-gray-300 hover:bg-accent hover:border-b-accent"
+          className="btn btn-outline border-b-4 border-base-content/40 border-b-accent hover:border-b-accent hover:bg-accent"
           onClick={() => setNumDie(groupKey, 0)}
         >
           Clear
         </button>
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-primary hover:border-b-primary hover:bg-primary"
+          className="btn btn-outline border-b-4 border-base-content/40 border-b-primary hover:border-b-primary hover:bg-primary"
           onClick={() => setNumDie(groupKey, numDie + 1)}
         >
           +1
         </button>
         <button
-          className="btn btn-outline border-b-4 border-gray-300 border-b-primary/70 hover:border-b-primary/70 hover:bg-primary/70"
+          className="btn btn-outline border-b-4 border-base-content/40 border-b-primary/70 hover:border-b-primary/70 hover:bg-primary/70"
           onClick={() => setNumDie(groupKey, numDie + 2)}
         >
           +2
@@ -128,29 +127,29 @@ const DiceGroup = ({
       <div className="p-4" />
       <div
         // CARD FOOTER
-        className="flex justify-center items-center gap-3"
+        className="flex items-center justify-center gap-3"
       >
         <button
-          className="btn btn-primary"
+          className="btn btn-primary rounded-lg"
           onClick={() => setRollGroupFlag(groupKey)}
         >
           Roll Group
         </button>
         <div className="form-control">
-          <label className="label justify-center items-center cursor-pointer">
+          <label className="label cursor-pointer items-center justify-center">
             <input
               checked={addToTotal}
               onChange={() => toggleAddToTotal(groupKey)}
               type="checkbox"
-              className="checkbox checkbox-secondary"
+              className="checkbox checkbox-secondary rounded-md"
             />
             <div className="p-1" />
-            <span className="label-text">Add to Combined</span>
+            <span className="label-text uppercase">Add to Combined</span>
           </label>
         </div>
       </div>
       <div className="p-2" />
-      <h5 className="text-center center-content text-xl uppercase">
+      <h5 className="center-content text-center text-xl uppercase">
         {title} Group Total: {groupTotal}
       </h5>
     </div>

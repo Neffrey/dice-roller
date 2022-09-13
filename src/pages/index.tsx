@@ -1,6 +1,8 @@
 // FRAMEWORKS
 import type { NextPage } from "next";
 import Head from "next/head";
+
+// COMPONENTS
 import DiceRoller from "components/templates/diceRoller";
 import { useDiceStore } from "components/stores/diceRollerStore";
 
@@ -18,22 +20,25 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto flex flex-col items-center justify-center p-4 min-h-screen">
-        <div className="p-2" />
-        <h1 className="text-center text-5xl font-bold">Dice Roller</h1>
-        <div className="p-3" />
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 justify-center items-center gap-5">
-          <button className="btn btn-accent" onClick={() => resetNumDie()}>
-            Reset All Dice
-          </button>
-          <button className="btn btn-primary" onClick={() => setRollAllFlags()}>
+      <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-base-100 p-4">
+        <div className="grid items-center justify-center gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <button
+            className="btn btn-primary rounded-lg"
+            onClick={() => setRollAllFlags()}
+          >
             Roll All Dice
           </button>
-          <div className="flex border-2 rounded-lg p-2">
+          <button
+            className="btn btn-accent rounded-lg"
+            onClick={() => resetNumDie()}
+          >
+            Reset All Dice
+          </button>
+          <div className="flex rounded-lg border-2 border-base-content/50 p-2 text-base-content">
             <h4 className="text-base">
               {"Add flat "}
               <input
-                className="w-10 text-base p-1 rounded-md text-slate-800 text-center"
+                className="w-10 rounded-md border border-solid border-base-content/40 p-1 text-center text-base text-slate-800"
                 type="text"
                 value={groupedAddMod}
                 onChange={(e) => setGroupedAddMod(parseInt(e.target.value))}
@@ -42,7 +47,7 @@ const Home: NextPage = () => {
             </h4>
           </div>
           <div className="border-b-4 border-b-secondary p-2">
-            <h3 className="text-2xl text-center font-semibold">
+            <h3 className="text-center text-2xl font-semibold">
               COMBINED TOTAL: {groupedDiceTotal}
             </h3>
           </div>
@@ -50,10 +55,6 @@ const Home: NextPage = () => {
         <div className="p-3" />
         <DiceRoller />
       </main>
-      <div className="p-5" />
-      <div className="flex flex-col justify-center items-center bg-secondary h-20 w-full min-w-max">
-        <h3 className="text-xl text-white font-semibold">Made With Love by Neffrey</h3>
-      </div>
     </>
   );
 };
