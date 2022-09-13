@@ -19,7 +19,7 @@ const Header: React.FC = () => {
           <DieIcon groupKey={6} classNames="fill-secondary-content" />
         </div>
         <div className="p-3" />
-        <h1 className="text-4xl font-semibold text-secondary-content">
+        <h1 className="text-base font-semibold text-secondary-content sm:text-xl md:text-2xl lg:text-4xl">
           DICE ROLLER
         </h1>
       </div>
@@ -30,7 +30,7 @@ const Header: React.FC = () => {
         <label
           // Open theme Drawer Btn
           htmlFor="theme-drawer"
-          className="btn btn-accent drawer-button rounded-lg"
+          className="btn btn-accent btn-sm drawer-button break-words rounded-lg lg:btn-md"
         >
           Change Theme
         </label>
