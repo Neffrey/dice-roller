@@ -24,6 +24,7 @@ export interface DiceRollerStoreTypes {
   deleteDie: (groupKey: number, rollIndex: number) => void;
   resetNumDie: () => void;
   rollDice: (groupKey: number, numDie: number, sides: number) => void;
+  rollGroup: (groupKey: number, numDie: number, sides: number) => void;
   setGroupedAddMod: (newAddMod: number) => void;
   setGroupTotal: (groupKey: number, rollValues: number[]) => void;
   setNumDie: (groupKey: number, numDie: number) => void;
@@ -58,13 +59,16 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
   deleteDie: (groupKey, rollIndex) => {
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
+        const newRollValues = diceGroup.rollValues.filter(
+          (rollValue, index) => {
+            if (index != rollIndex) return rollValue;
+          }
+        );
         return diceGroup.groupKey === groupKey
           ? {
               ...diceGroup,
-              rollValues: diceGroup.rollValues.filter((rollValue, index) => {
-                if (index != rollIndex) return rollValue;
-              }),
-              numDie: diceGroup.numDie - 1,
+              rollValues: newRollValues,
+              groupTotal: newRollValues.reduce((prev, cur) => prev + cur, 0),
             }
           : diceGroup;
       }),
@@ -79,18 +83,41 @@ export const useDiceStore = create<DiceRollerStoreTypes>((set, get) => ({
   },
   rollDice: (groupKey, numDie, sides) => {
     // Returns a random integer from 0 to sides -1. +1 at end to make the int from 1 to sides
-    const rollValuesArray: number[] = [];
+    const newRollValues: number[] = [];
     for (let i = 0; i < numDie; i++) {
-      rollValuesArray[i] = Math.floor(Math.random() * sides + 1);
+      newRollValues[i] = Math.floor(Math.random() * sides + 1);
     }
-    // Set rollValuesArray inside of individual diceGroup
+
+    // Set newRollValues inside of individual diceGroup
     set((state) => ({
       diceGroups: state.diceGroups.map((diceGroup) => {
         return diceGroup.groupKey === groupKey
           ? {
               ...diceGroup,
-              rollValues: rollValuesArray,
-              groupTotal: rollValuesArray.reduce((prev, cur) => prev + cur, 0),
+              rollValues: diceGroup.rollValues.concat(newRollValues),
+              groupTotal: diceGroup.rollValues
+                .concat(newRollValues)
+                .reduce((prev, cur) => prev + cur, 0),
+            }
+          : diceGroup;
+      }),
+    }));
+  },
+  rollGroup: (groupKey, numDie, sides) => {
+    // Returns a random integer from 0 to sides -1. +1 at end to make the int from 1 to sides
+    const newRollValues: number[] = [];
+    for (let i = 0; i < numDie; i++) {
+      newRollValues[i] = Math.floor(Math.random() * sides + 1);
+    }
+
+    // Set newRollValues inside of individual diceGroup
+    set((state) => ({
+      diceGroups: state.diceGroups.map((diceGroup) => {
+        return diceGroup.groupKey === groupKey
+          ? {
+              ...diceGroup,
+              rollValues: newRollValues,
+              groupTotal: newRollValues.reduce((prev, cur) => prev + cur, 0),
             }
           : diceGroup;
       }),

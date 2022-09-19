@@ -25,19 +25,20 @@ const DiceGroup = ({
 }: DiceGroupType) => {
   const alternateStyles = useDiceStore((state) => state.alternateStyles);
   const rollDice = useDiceStore((state) => state.rollDice);
+  const rollGroup = useDiceStore((state) => state.rollGroup);
   const setGroupTotal = useDiceStore((state) => state.setGroupTotal);
   const setRollGroupFlag = useDiceStore((state) => state.setRollGroupFlag);
   const setNumDie = useDiceStore((state) => state.setNumDie);
   const setSides = useDiceStore((state) => state.setSides);
   const toggleAddToTotal = useDiceStore((state) => state.toggleAddToTotal);
 
-  // Effect to trigger rollDice
+  // Effect to trigger group rollGroup
   React.useEffect(() => {
     if (rollGroupFlag) {
-      rollDice(groupKey, numDie, sides);
+      rollGroup(groupKey, numDie, sides);
       setRollGroupFlag(groupKey);
     }
-  }, [rollDice, setRollGroupFlag, groupKey, rollGroupFlag, numDie, sides]);
+  }, [rollGroup, setRollGroupFlag, groupKey, rollGroupFlag, numDie, sides]);
 
   // Effect to erase roll values for dice that are removed and update group total
   React.useEffect(() => {
@@ -45,6 +46,13 @@ const DiceGroup = ({
       setGroupTotal(groupKey, rollValues.slice(0, numDie));
     }
   }, [setGroupTotal, numDie, groupKey, rollValues]);
+
+  // Effect to trigger new dice roll
+  React.useEffect(() => {
+    if (numDie > rollValues.length) {
+      rollDice(groupKey, numDie - rollValues.length, sides);
+    }
+  }, [rollDice, groupKey, numDie, rollGroupFlag, rollValues, sides]);
 
   return (
     <div
@@ -135,18 +143,16 @@ const DiceGroup = ({
         >
           Roll Group
         </button>
-        <div className="form-control">
-          <label className="label cursor-pointer items-center justify-center">
-            <input
-              checked={addToTotal}
-              onChange={() => toggleAddToTotal(groupKey)}
-              type="checkbox"
-              className="checkbox checkbox-secondary rounded-md"
-            />
-            <div className="p-1" />
-            <span className="label-text uppercase">Add to Combined</span>
-          </label>
-        </div>
+        <label className="label cursor-pointer items-center justify-center">
+          <input
+            checked={addToTotal}
+            onChange={() => toggleAddToTotal(groupKey)}
+            type="checkbox"
+            className="checkbox checkbox-secondary rounded-md"
+          />
+          <div className="p-1" />
+          <span className="label-text uppercase">Add to Combined</span>
+        </label>
       </div>
       <div className="p-2" />
       <h5 className="center-content text-center text-xl uppercase">
