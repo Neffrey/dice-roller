@@ -1,21 +1,21 @@
-// FRAMEWORK
+// LIBRARIES
 import React from "react";
+import Drawer from "react-modern-drawer";
+import "react-modern-drawer/dist/index.css";
 import { FaStar } from "react-icons/fa";
 
-// MY COMPONENTS
-import { useThemeStore } from "components/stores/themeStore";
+// COMPONENTS
+import useThemeStore from "components/stores/themeStore";
 
-interface ThemeDrawerProps {
-  children?: React.ReactNode;
-}
-
-// Component Function
-const ThemeDrawer = ({ children }: ThemeDrawerProps) => {
-  const setCurrentTheme = useThemeStore((state) => state.setCurrentTheme);
+// FC
+const ThemeDrawer = () => {
   const currentTheme = useThemeStore((state) => state.currentTheme);
+  const drawerIsOpen = useThemeStore((state) => state.drawerIsOpen);
   const themeList = useThemeStore((state) => state.themeList);
+  const setCurrentTheme = useThemeStore((state) => state.setCurrentTheme);
+  const toggleDrawer = useThemeStore((state) => state.toggleDrawer);
 
-  // Effect to trigger Theme Change local store
+  // Effect to trigger Theme Change in localStorage
   React.useEffect(() => {
     const localTheme = window.localStorage.getItem("theme");
     if (localTheme !== null && themeList.includes(localTheme)) {
@@ -24,82 +24,85 @@ const ThemeDrawer = ({ children }: ThemeDrawerProps) => {
   }, [setCurrentTheme, currentTheme, themeList]);
 
   return (
-    <div className="drawer drawer-end">
-      <input id="theme-drawer" type="checkbox" className="drawer-toggle" />
+    <Drawer
+      customIdSuffix="theme-drawer"
+      className="w-full min-w-full transition md:min-w-[75vw] lg:min-w-[60vw]"
+      direction="right"
+      open={drawerIsOpen}
+      onClose={toggleDrawer}
+    >
       <div
-        // Page Content Here
-        className="drawer-content"
+        // Drawer Content Here
+        className="grid h-full w-full grid-cols-3 gap-2 bg-base-300 p-4 text-base-content"
       >
-        {children}
-      </div>
-      <div className="drawer-side">
-        <label htmlFor="theme-drawer" className="drawer-overlay" />
-        <div
-          // Drawer Content Here
-          className="grid grid-cols-3 gap-2 overflow-y-auto bg-base-300 p-4 text-base-content"
-        >
-          {themeList.map((theme) => {
-            return (
-              <button
-                key={theme}
-                data-set-theme={theme}
-                data-act-class="ACTIVECLASS"
-                className={`overflow-hidden rounded-lg text-sm outline-2 outline-offset-2 outline-base-content lg:text-base ${
-                  theme === currentTheme
-                    ? "border-4 border-primary hover:border-b-primary"
-                    : "border border-base-content/20 hover:border-base-content/40"
-                }`}
-                onClick={() => {
-                  setCurrentTheme(theme);
-                }}
+        {themeList.map((theme) => {
+          return (
+            <button
+              key={theme}
+              data-set-theme={theme}
+              data-act-class="ACTIVECLASS"
+              className={`overflow-hidden rounded-lg border-4 text-sm lg:text-base ${
+                theme === currentTheme
+                  ? "border-primary"
+                  : "border-transparent hover:border-base-content/40"
+              }`}
+              onClick={() => {
+                toggleDrawer();
+                setCurrentTheme(theme);
+              }}
+            >
+              <div
+                data-theme={theme}
+                className="relative h-full w-full cursor-pointer bg-base-100 font-sans text-base-content"
               >
-                <label htmlFor="theme-drawer">
-                  <div
-                    data-theme={theme}
-                    className="relative w-full cursor-pointer bg-base-100 font-sans text-base-content"
-                  >
-                    {theme === currentTheme && (
-                      <div className="absolute top-1 left-1 text-2xl text-primary">
-                        <FaStar />
+                {
+                  // Star in top left corner on current theme
+                  theme === currentTheme && (
+                    <div className="absolute top-1 left-1 text-2xl text-primary">
+                      <FaStar />
+                    </div>
+                  )
+                }
+                <div className="grid h-full w-full grid-cols-5 grid-rows-3">
+                  {/* Left side bg color blocks */}
+                  <div className="col-start-1 row-span-2 row-start-1 bg-base-200" />
+                  <div className="col-start-1 row-start-3 bg-base-300" />
+                  {/* Right side theme name & bg color blocks */}
+                  <div className="col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col justify-center gap-1 bg-base-100 px-2">
+                    <div className="text-right text-lg font-bold capitalize lg:text-xl">
+                      {theme}
+                    </div>
+                    {/* Theme "A" blocks */}
+                    <div className="flex flex-wrap justify-end gap-1">
+                      <div className="flex aspect-square w-4 items-center justify-center rounded bg-primary sm:w-5 md:w-6 lg:w-7">
+                        <span className="text-sm font-bold text-primary-content">
+                          A
+                        </span>
                       </div>
-                    )}
-                    <div className="grid grid-cols-5 grid-rows-3">
-                      <div className="col-start-1 row-span-2 row-start-1 bg-base-200" />
-                      <div className="col-start-1 row-start-3 bg-base-300" />
-                      <div className="col-span-4 col-start-2 row-span-3 row-start-1 flex flex-col gap-1 bg-base-100 p-2">
-                        <div className="font-bold capitalize">{theme}</div>
-                        <div className="flex flex-wrap gap-1">
-                          <div className="flex aspect-square w-3 items-center justify-center rounded bg-primary lg:w-6">
-                            <div className="text-sm font-bold text-primary-content">
-                              A
-                            </div>
-                          </div>
-                          <div className="flex aspect-square w-3 items-center justify-center rounded bg-secondary lg:w-6">
-                            <div className="text-sm font-bold text-secondary-content">
-                              A
-                            </div>
-                          </div>
-                          <div className="flex aspect-square w-3 items-center justify-center rounded bg-accent lg:w-6">
-                            <div className="text-sm font-bold text-accent-content">
-                              A
-                            </div>
-                          </div>
-                          <div className="flex aspect-square w-3 items-center justify-center rounded bg-neutral lg:w-6">
-                            <div className="text-sm font-bold text-neutral-content">
-                              A
-                            </div>
-                          </div>
-                        </div>
+                      <div className="flex aspect-square w-4 items-center justify-center rounded bg-secondary sm:w-5 md:w-6 lg:w-7">
+                        <span className="text-sm font-bold text-secondary-content">
+                          A
+                        </span>
+                      </div>
+                      <div className="flex aspect-square w-4 items-center justify-center rounded bg-accent sm:w-5 md:w-6 lg:w-7">
+                        <span className="text-sm font-bold text-accent-content">
+                          A
+                        </span>
+                      </div>
+                      <div className="flex aspect-square w-4 items-center justify-center rounded bg-neutral sm:w-5 md:w-6 lg:w-7">
+                        <span className="text-sm font-bold text-neutral-content">
+                          A
+                        </span>
                       </div>
                     </div>
                   </div>
-                </label>
-              </button>
-            );
-          })}
-        </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
-    </div>
+    </Drawer>
   );
 };
 export default ThemeDrawer;

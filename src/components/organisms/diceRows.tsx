@@ -40,7 +40,7 @@ const DiceRows = ({
           }`}
         >
           <div className="w-5">
-            <DieIcon groupKey={groupKey} classNames="fill-base-content" />
+            <DieIcon groupKey={groupKey} className="fill-base-content" />
           </div>
           <div className="p-1" />
           <h5 className="text-base text-base-content">

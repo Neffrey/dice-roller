@@ -2,13 +2,16 @@
 import create from "zustand";
 
 export interface ThemeStoreType {
-  themeList: string[];
+  drawerIsOpen: boolean;
   currentTheme: string;
-  //getLocalTheme: () => void;
+  themeList: string[];
   setCurrentTheme: (current: string) => void;
+  toggleDrawer: () => void;
 }
 
-export const useThemeStore = create<ThemeStoreType>((set) => ({
+const useThemeStore = create<ThemeStoreType>((set, get) => ({
+  drawerIsOpen: false,
+  currentTheme: "night",
   themeList: [
     "autumn",
     "acid",
@@ -35,10 +38,16 @@ export const useThemeStore = create<ThemeStoreType>((set) => ({
     "valentine",
     "winter",
   ],
-  currentTheme: "night",
   setCurrentTheme: (current) => {
     set(() => ({
       currentTheme: current,
     }));
   },
+  toggleDrawer: () => {
+    set(() => ({
+      drawerIsOpen: !get().drawerIsOpen,
+    }));
+  },
 }));
+
+export default useThemeStore;

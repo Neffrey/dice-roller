@@ -1,4 +1,4 @@
-// FRAMEWORK
+// LIBRARIES
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 // import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
@@ -37,7 +37,10 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content="#333333" />
           <meta name="msapplication-TileColor" content="#00a3c4" />
           <meta property="og:type" content="website" />
-          <meta property="og:title" content="nDiceRoller - Prayin for nat 20s" />
+          <meta
+            property="og:title"
+            content="nDiceRoller - Prayin for nat 20s"
+          />
           <meta
             property="og:description"
             content="Roll any number of dice with any number of sides - A better multi dice roller with other features like combining dice totals and adding a flat modifier to it."

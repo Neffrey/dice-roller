@@ -1,7 +1,7 @@
-// FRAMEWORKS
+// LIBRARIESS
 import React from "react";
 
-// MY COMPONENTS
+// COMPONENTS
 import { DiceGroupType, useDiceStore } from "components/stores/diceRollerStore";
 import DieIcon from "components/molecules/dieIcon";
 import DiceRows from "components/organisms/diceRows";
@@ -57,6 +57,7 @@ const DiceGroup = ({
   return (
     <div
       // DIE GROUP CARD
+      id={`dgroup${groupKey}`}
       key={groupKey}
       className={`card h-full min-h-full justify-center rounded-lg border-2 border-solid p-4 ${
         // Alternate border & bg colors
@@ -78,7 +79,7 @@ const DiceGroup = ({
           value={numDie}
           onChange={(e) => setNumDie(groupKey, parseInt(e.target.value))}
         />
-        <DieIcon groupKey={groupKey} classNames="w-10 fill-base-content" />
+        <DieIcon groupKey={groupKey} className="w-10 fill-base-content" />
         <h3 className="text-xl">{title}</h3>
         {groupKey == 8 && (
           <input

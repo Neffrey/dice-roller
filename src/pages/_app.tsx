@@ -1,14 +1,17 @@
-// UTILS
+// LIBRARIES
 import React from "react";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { themeChange } from "theme-change";
 import "../styles/globals.css";
 
-// MY COMPONENTS
-import Header from "components/templates/header";
-import Footer from "components/templates/footer";
+// COMPONENTS
 import ThemeDrawer from "components/templates/themeDrawer";
+import Header from "components/templates/header";
+import DGroupNav from "components/templates/dGroupNav";
+import Footer from "components/templates/footer";
+import ScrollProvider from "components/hooks/scrollProvider";
 
+// FC
 const DiceRollerApp: AppType = ({ Component, pageProps }) => {
   React.useEffect(() => {
     themeChange(false);
@@ -16,13 +19,13 @@ const DiceRollerApp: AppType = ({ Component, pageProps }) => {
   }, []);
 
   return (
-    <ThemeDrawer>
-      <>
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
-      </>
-    </ThemeDrawer>
+    <ScrollProvider>
+      <ThemeDrawer />
+      <Header />
+      <DGroupNav />
+      <Component {...pageProps} />
+      <Footer />
+    </ScrollProvider>
   );
 };
 
